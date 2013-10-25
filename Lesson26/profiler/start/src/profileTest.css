@@ -1,0 +1,29 @@
+/* CSS file */
+Application{
+	font-family: Arial, Helvetica, sans-serif;
+	background-color:#333333;	
+	selectionColor: #EA800C;
+	rollOverColor: #CECECE;
+}
+
+.navBox {
+	border-style: solid;
+	border-color: #333333;
+	corner-radius: 5;
+	background-color:#FFFFFF;
+	vertical-gap:0;		
+	horizontal-align: center;
+}
+
+.productBox {
+	border-style: solid;
+	border-color: #333333;
+	corner-radius: 10;
+	background-color:#FFFFFF;
+	vertical-gap:5;		
+	horizontal-align: center;
+	padding-top:10;
+	padding-left:10;
+	padding-right:5;
+}
+

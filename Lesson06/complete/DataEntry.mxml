@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="absolute"
+	creationComplete="unitRPC.send();prodByCatRPC.send()">
+
+	<mx:Script>
+		<![CDATA[
+			import flash.net.FileReference;
+			import mx.rpc.events.ResultEvent;
+			import utils.Util;
+			import mx.collections.ArrayCollection;
+	
+			[Bindable]
+			private var units:ArrayCollection=new ArrayCollection();
+	
+			public function fileBrowse():void
+			{
+				var myFileRef:FileReferenceList = new FileReferenceList();
+				myFileRef.browse();
+			}
+			
+			private function unitRPCResult(event:ResultEvent):void
+			{
+				units=event.result.allUnits.unit;
+			}
+	
+			private function populateForm(event:Event):void
+			{
+				var selectedNode:Object=event.target.selectedItem;
+			
+				if(selectedNode.@prodName != undefined){
+					Util.presetList(unitID,"unitID",selectedNode.@unitID);
+					prodName.text = selectedNode.@prodName;
+					cost.text = selectedNode.@cost;
+					listPrice.text = selectedNode.@listPrice;
+					description.text = selectedNode.@description;
+					isOrganic.selected = Util.yesNoToBoolean(selectedNode.@isOrganic);
+					isLowFat.selected = Util.yesNoToBoolean(selectedNode.@isLowFat);
+					imageName.text = selectedNode.@imageName;
+				} else {
+					resetForm();
+				}
+			}
+			
+			private function resetForm():void{
+				prodName.text = "";
+				unitID.selectedIndex = -1;
+				cost.text="";
+				listPrice.text="";
+				description.text="";
+				isOrganic.selected = false;
+				isLowFat.selected = false;
+				imageName.text = "";
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HTTPService id="unitRPC"
+		url="http://www.flexgrocer.com/units.xml"
+		result="unitRPCResult(event)"/>
+
+	<mx:HTTPService id="prodByCatRPC"
+		url="http://www.flexgrocer.com/categorizedProducts.xml"
+		resultFormat="e4x"/>
+
+	<mx:XMLListCollection id="foodColl"
+		source="{prodByCatRPC.lastResult.category}"/>
+
+	<mx:HBox>
+		<mx:Tree id="productTree"
+			height="100%"
+			dataProvider="{foodColl}"
+			labelField="@name"
+			change="populateForm(event)"/>
+	
+		<mx:Form>
+			<mx:FormItem label="Product Name">
+				<mx:TextInput id="prodName"/>
+			</mx:FormItem>
+			<mx:FormItem label="Unit">
+				<mx:List id="unitID"
+					rowCount="4"
+					dataProvider="{units}"
+					labelField="unitName"/>
+			</mx:FormItem>
+			<mx:FormItem label="Cost">
+				<mx:TextInput id="cost"/>
+			</mx:FormItem>
+			<mx:FormItem label="List Price">
+				<mx:TextInput id="listPrice"/>
+			</mx:FormItem>
+			<mx:FormItem label="Description">
+				<mx:RichTextEditor id="description" height="200"/>
+			</mx:FormItem>
+			<mx:FormItem label="Specialties">
+				<mx:CheckBox id="isLowFat" label="Is Low Fat"/>
+				<mx:CheckBox id="isOrganic" label="Is Organic"/>
+			</mx:FormItem>
+			<mx:FormItem label="Image Name" direction="horizontal">
+				<mx:TextInput id="imageName"/>
+				<mx:Button click="fileBrowse()" label="Browse"/>
+			</mx:FormItem>
+			<mx:FormItem>
+				<mx:HBox>
+				<mx:Button label="Update"/>
+				<mx:Button label="Delete"/>
+				</mx:HBox>
+			</mx:FormItem>
+		</mx:Form>
+	</mx:HBox>
+	
+</mx:Application>

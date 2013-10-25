@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="310" height="250" horizontalScrollPolicy="off" creationComplete="handleCreationComplete(event)">
+	<mx:Script>
+		<![CDATA[
+			import managers.UpdateManager;
+
+			[Bindable]
+			public var product:XML;
+
+			private var updateManager:UpdateManager = UpdateManager.getInstance();
+
+			private function getFileName( productData:XML ):String {
+				return 'assets/' + productData.@imageName;
+			}
+			
+			private function handleCreationComplete( event:Event ):void {
+				updateManager.addEventListener( 'toggleViewOnly', handleViewOnlyChanged, false, 0, true) );
+			}
+			
+			private function handleViewOnlyChanged( event:Event ):void {
+				addToCart.visible = !addToCart.visible;
+			}
+		]]>
+	</mx:Script>
+	<mx:HBox width="100%">
+		<mx:VBox>
+			<mx:Image source="{getFileName(product)}"/>
+			<mx:Button id="addToCart" enabled="false" visible="false" label="Add to Cart"/>
+		</mx:VBox>
+		<mx:Form width="100%" height="100%">
+			<mx:FormHeading label="{product.@name}"/>
+			<mx:FormItem label="Cost">
+				<mx:Label text="{product.@cost}"/>
+			</mx:FormItem>
+			<mx:FormItem label="Is Organic">
+				<mx:Label text="{product.@isOrganic}"/>
+			</mx:FormItem>
+			<mx:FormItem label="Is Low Fat">
+				<mx:Label text="{product.@isLowFat}"/>
+			</mx:FormItem>
+		</mx:Form>
+	</mx:HBox>
+	<mx:Text selectable="false" width="100%" text="{product.@description}"/>
+</mx:VBox>

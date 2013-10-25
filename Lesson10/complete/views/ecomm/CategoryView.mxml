@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HorizontalList xmlns:mx="http://www.adobe.com/2006/mxml"
+	dataProvider="{cats}"
+	itemRenderer="views.ecomm.TextAndPic"
+	horizontalScrollPolicy="off"
+	click="categorySelect()">
+	
+	<mx:Metadata>
+		[Event(name="categorySelect",type="events.CategoryEvent")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import valueObjects.Category;
+			import events.CategoryEvent;
+
+			[Bindable]
+			public var cats:ArrayCollection;
+			[Bindable]
+			public var catSelected:int;
+			
+			private function categorySelect():void{
+				var e:CategoryEvent = new CategoryEvent(this.selectedItem as Category, "categorySelect");
+				this.dispatchEvent(e);
+			}
+		]]>
+	</mx:Script>
+</mx:HorizontalList>

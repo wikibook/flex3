@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Metadata>
+		[Event(name="back")]
+		[Event(name="orderConfirmed")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.printing.FlexPrintJob;
+			import valueObjects.OrderInfo;
+			import views.ecomm.PrintReceipt;
+			
+			[Bindable]
+			public var orderInfo:OrderInfo;
+
+			private function back():void{
+				var o:Event=new Event("back");
+				dispatchEvent(o);
+			}
+			
+			private function orderConfirm():void{
+				var o:Event = new Event("orderConfirmed");
+				this.dispatchEvent(o);
+			}
+			private function doPrint():void{
+				var pj:FlexPrintJob = new FlexPrintJob();
+				if(pj.start() != true){
+					return;
+				}
+				var theReceipt:PrintReceipt=new PrintReceipt();
+				this.addChild(theReceipt);
+				theReceipt.orderInfo=orderInfo;
+				pj.addObject(theReceipt);
+				pj.send();
+				this.removeChild(theReceipt);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:DateFormatter id="orderFormat"/>
+
+	<mx:Form styleName="formPage1">
+		<mx:Label text="Checkout Page 3 of 3"
+			styleName="standardOrangeBold"/>
+		<mx:FormHeading label="Billing Information"
+			styleName="standardBlackBold"/>
+		<mx:HBox styleName="formHBox">
+			<mx:VBox>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingName}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingAddress}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingCity}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingState}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingZip}"/>
+				</mx:FormItem>
+			</mx:VBox>
+			<mx:VBox>
+				<mx:FormItem label="Delivery Date">
+					<mx:Label text="{orderFormat.format(orderInfo.deliveryDate)}"/>
+				</mx:FormItem>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:Form>
+
+	<mx:Button label="Complete Order" click="orderConfirm()"/>
+	<mx:Label text="* Clicking this button will bill your credit card and 
+		complete this order"/>
+	<mx:Spacer height="20"/>
+	<mx:Button label="Edit Information" click="back()"/>
+	<mx:Button label="Print Receipt" click="doPrint()"/>
+</mx:VBox>

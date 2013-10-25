@@ -1,0 +1,38 @@
+<productList>
+	<product>
+		<name>T Bone Steak</name>
+		<unitName>pound</unitName>
+		<cost>6.00</cost>
+		<listPrice>9.98</listPrice>
+	</product>
+	<product>
+		<name>Milk</name>
+		<unitName>each</unitName>
+		<cost>.99</cost>
+		<listPrice>1.59</listPrice>
+	</product>
+	<product>
+		<name>Yogurt</name>
+		<unitName>each</unitName>
+		<cost>.99</cost>
+		<listPrice>1.19</listPrice>
+	</product>
+	<product>
+		<name>Grapes</name>
+		<unitName>pound</unitName>
+		<cost>2.50</cost>
+		<listPrice>3.95</listPrice>
+	</product>
+	<product>
+		<name>Bell Peppers</name>
+		<unitName>each</unitName>
+		<cost>1.25</cost>
+		<listPrice>1.99</listPrice>
+	</product>
+	<product>
+		<name>Bananas</name>
+		<unitName>bunch</unitName>
+		<cost>1.09</cost>
+		<listPrice>1.95</listPrice>
+	</product>
+</productList>

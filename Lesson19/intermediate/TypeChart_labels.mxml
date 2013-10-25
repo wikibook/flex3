@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<v:MaxRestorePanel
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:v="views.*">
+	<mx:Script>
+	
+		<![CDATA[
+			import valueObjects.Category;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.collections.ArrayCollection;
+			import events.ObjectDataEvent;
+			
+			[Bindable]
+			public  var dp:ArrayCollection;
+
+			[Bindable]
+			public  var grossOrNet:String;
+
+			private function renderDGDollars(item:Object, col:DataGridColumn):String{
+				return dollars.format(item[col.dataField]);
+			}
+
+			private function renderLabel(item:Object, field:String, index:int,pct:Number):String{
+				return item.CATEGORY;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:CurrencyFormatter currencySymbol="$" id="dollars" useThousandsSeparator="true"/>
+
+
+	<mx:ViewStack id="chartStack"  width="100%" height="100%">
+	<mx:VBox width="100%" height="100%">
+		<mx:PieChart id="chart"
+			width="100%" height="100%"
+			dataProvider="{dp}">
+			<mx:series>
+				<mx:PieSeries labelPosition="insideWithCallout"
+					field="{grossOrNet}"
+					labelFunction=”renderLabel”>
+				</mx:PieSeries>
+			</mx:series>
+		</mx:PieChart>
+    </mx:VBox>	
+    <mx:VBox width="100%" height="100%">
+			<mx:DataGrid id="chartData" dataProvider="{dp}" width="100%" height="100%">
+				<mx:columns>
+					<mx:DataGridColumn dataField="CATEGORY" headerText="Category"/>
+					<mx:DataGridColumn dataField="GROSS" headerText="Total Sales" labelFunction="renderDGDollars"/>
+					<mx:DataGridColumn dataField="NET" headerText="Total Profit" labelFunction="renderDGDollars"/>
+				</mx:columns>
+			</mx:DataGrid>
+	    </mx:VBox>
+	</mx:ViewStack>
+    
+	<mx:ControlBar id="controls">
+		<mx:Button label="Graph" id="btGraph" click="chartStack.selectedIndex=0"/>
+		<mx:Button label="Data" id="btData" click="chartStack.selectedIndex=1"/>
+		
+	</mx:ControlBar>
+
+</v:MaxRestorePanel>

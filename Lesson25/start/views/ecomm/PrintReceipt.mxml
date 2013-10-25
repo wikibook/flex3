@@ -1,0 +1,47 @@
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="450" height="450" 
+	backgroundColor="#FFFFFF"
+	paddingTop="50"
+	paddingLeft="50"
+	paddingRight="50">
+
+	<mx:Script>
+		<![CDATA[
+			import valueObjects.OrderInfo;
+			[Bindable]
+			public var orderInfo:OrderInfo;
+		]]>
+	</mx:Script>
+	
+	<mx:DateFormatter id="orderFormat"/>
+	<mx:Label text="Flex Grocer Thanks You!" fontSize="20" width="100%"/>
+	<mx:Form styleName="formPage1">
+		
+		<mx:FormHeading label="Billing Information"
+			styleName="standardBlackBold"/>
+		<mx:HBox styleName="formHBox">
+			<mx:VBox>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingName}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingAddress}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingCity}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingState}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingZip}"/>
+				</mx:FormItem>
+			</mx:VBox>
+			<mx:VBox>
+				<mx:FormItem label="Delivery Date">
+					<mx:Label text="{orderFormat.format(orderInfo.deliveryDate)}"/>
+				</mx:FormItem>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:Form>
+</mx:VBox>

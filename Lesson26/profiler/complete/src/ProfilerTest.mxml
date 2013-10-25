@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal" xmlns:component="component.*">
+	<mx:Script>
+		<![CDATA[
+			import managers.UpdateManager;
+			import mx.rpc.http.HTTPService;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+
+			private var updateManager:UpdateManager = UpdateManager.getInstance();
+
+			private function handleNavClick( foodType:String ):void {
+				var fileName:String = 'assets/' + foodType + '.xml';
+				loadNewXMLData( fileName );
+			}
+
+			private function loadNewXMLData( fileName:String ):void {
+				var httpService:HTTPService = new HTTPService();			
+				httpService.url = fileName;
+				httpService.method = "GET";
+				httpService.resultFormat = "e4x";
+				httpService.addEventListener(ResultEvent.RESULT, handleDataResult );
+				httpService.addEventListener(FaultEvent.FAULT, handleDataFault );
+				httpService.send();
+			}
+
+			private function handleDataResult( event:ResultEvent ):void {
+				productRepeater.dataProvider = event.result.product;
+			}	
+
+			private function handleDataFault( event:FaultEvent ):void {
+				trace("Can't retrieve requested data : " + event.fault );
+			}
+		]]>
+	</mx:Script>
+	<mx:Style source="profileTest.css"/>
+	<mx:VBox width="125" height="100%" horizontalAlign="center">
+		<mx:VBox styleName="navBox" click="handleNavClick( 'dairy')">
+			<mx:Image source="assets/nav_dairy.jpg"/>
+			<mx:Label text="Dairy"/>			
+		</mx:VBox>
+		<mx:VBox styleName="navBox" click="handleNavClick( 'deli')">
+			<mx:Image source="assets/nav_deli.jpg"/>
+			<mx:Label text="Deli"/>			
+		</mx:VBox>
+		<mx:VBox styleName="navBox" click="handleNavClick( 'fruit')">
+			<mx:Image source="assets/nav_fruit.jpg"/>
+			<mx:Label text="Fruit"/>			
+		</mx:VBox>
+		<mx:VBox styleName="navBox" click="handleNavClick( 'meat')">
+			<mx:Image source="assets/nav_meat.jpg"/>
+			<mx:Label text="Meat"/>			
+		</mx:VBox>
+		<mx:VBox styleName="navBox" click="handleNavClick( 'seafood')">
+			<mx:Image source="assets/nav_seafood.jpg"/>
+			<mx:Label text="Seafood"/>			
+		</mx:VBox>
+		<mx:VBox styleName="navBox" click="handleNavClick( 'veg')">
+			<mx:Image source="assets/nav_vegetables.jpg"/>
+			<mx:Label text="Vegetables"/>			
+		</mx:VBox>
+		<mx:Button label="Toggle View Only" click="updateManager.toggleViewOnly()"/>
+	</mx:VBox>
+	<mx:HBox width="100%" height="100%">
+		<mx:Repeater id="productRepeater" recycleChildren="true">
+			<component:ImageDisplay product="{productRepeater.currentItem as XML}" styleName="productBox"/>
+		</mx:Repeater>
+	</mx:HBox>
+</mx:Application>

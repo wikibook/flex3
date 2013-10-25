@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:v="views.dashboard.*"
+	layout="horizontal"
+	creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.events.FaultEvent;
+
+			[Bindable]
+			public var selectedType:String = "All";
+
+			[Bindable]
+			private var categories:ArrayCollection=new ArrayCollection();
+
+			private function catHandler(event:ResultEvent):void{
+				categories = event.result.catalog.category;
+				var catObj:Object = new Object();
+				catObj.name = "All";
+				catObj.categoryID = 0;
+				categories.addItemAt(catObj, 0);
+				catCombo.selectedIndex = 0;
+			}
+
+			private function salesRPCResult(event:ResultEvent):void{
+				sales.dp = this.sortByDateField(event.result as ArrayCollection, "DTSALE");
+				comp.dp = this.sortByDateField(event.result as ArrayCollection,"DTSALE");
+			}
+
+			private function typeRPCResult(event:ResultEvent):void{
+				type.dp = (event.result as ArrayCollection);
+			}
+
+			private function showFault(event:FaultEvent):void{
+				trace(event.fault.faultCode+":"+event.fault.faultString);
+			}
+
+			private function getData():void{
+				dashboardWS.getTypeSalesData.send();
+				dashboardWS.getSalesData.send();
+			}
+
+			private function init():void{
+				startDate.selectedDate = new Date(2006,3,1);
+				endDate.selectedDate = new Date(2006,4,1);
+				catRPC.send();
+				getData();
+			}
+
+			private function sortByDateField(aSales:ArrayCollection, colName:String):ArrayCollection{
+				var salesData:ArrayCollection = aSales;
+				var sort:Sort = new Sort();
+				sort.fields = new Array(new SortField(colName,true));
+				salesData.sort = sort;
+				salesData.refresh();
+				return salesData;
+			}
+
+			private function setCat(event:Event):void{
+				selectedType = ComboBox(event.currentTarget).selectedItem.name;
+				getData();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:WebService
+		id="dashboardWS"
+		wsdl="http://localhost:8300/flexGrocer/cfcs/aggregate.cfc?wsdl"
+		fault="showFault(event)">
+		<mx:operation name="getTypeSalesData" result="typeRPCResult(event)">
+			<mx:request>
+				<startDate>{startDate.selectedDate}</startDate>
+				<endDate>{endDate.selectedDate}</endDate>
+			</mx:request>
+		</mx:operation>
+		<mx:operation name="getSalesData" result="salesRPCResult(event)">
+			<mx:request>
+				<startDate>{startDate.selectedDate}</startDate>
+				<endDate>{endDate.selectedDate}</endDate>
+				<category>{selectedType}</category>
+			</mx:request>
+		</mx:operation>
+	</mx:WebService>
+
+	<mx:HTTPService id="catRPC"
+		url="http://localhost:8300/flexGrocer/xml/category.xml"
+		result="catHandler(event)"/>
+
+	<mx:ApplicationControlBar dock="true">
+		<mx:Label text="Start Date"/>
+		<mx:DateField id="startDate" change="getData()"/>
+		<mx:Label text="End Date"/>
+		<mx:DateField id="endDate" change="getData()"/>
+		<mx:Spacer width="100%"/>
+		<mx:ComboBox id="catCombo"
+			dataProvider="{categories}"
+			change="setCat(event)"
+			labelField = "name"/>
+		<mx:Spacer width="100%"/>
+		<mx:RadioButtonGroup id="grossOrNetGroup"/>
+		<mx:RadioButton id="gross"
+			groupName="grossOrNetGroup"
+			label="Gross Sales"
+			data="GROSS"
+			selected="true"/>
+		<mx:RadioButton id="net"
+			groupName="grossOrNetGroup"
+			label="Net Sales"
+			data="NET"/>
+	</mx:ApplicationControlBar>
+
+	<mx:states>
+		<mx:State name="fullSales">
+			<mx:SetProperty target="{rightCharts}"
+				name="width" value="0"/>
+			<mx:SetProperty target="{rightCharts}"
+				name="height" value="0"/>
+		</mx:State>
+
+		<mx:State name="fullType">
+			<mx:SetProperty target="{sales}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{sales}"
+				name="height"
+				value="0"/>
+			<mx:SetProperty target="{comp}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{comp}"
+				name="height"
+				value="0"/>
+		</mx:State>
+		<mx:State name="fullComp">
+			<mx:SetProperty target="{sales}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{sales}"
+				name="height"
+				value="0"/>
+			<mx:SetProperty target="{type}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{type}"
+				name="height"
+				value="0"/>
+		</mx:State>
+	</mx:states>
+
+	<v:ChartPod id="sales"
+		width="100%" height="100%"
+		title="Sales Chart"
+		maximize="this.currentState='fullSales'"
+		restore="this.currentState=''">
+	</v:ChartPod>
+	<mx:VBox id="rightCharts"
+		width="100%" height="100%" >
+		<v:ChartPod id="type"
+			width="100%" height="100%"
+			title="Category Chart"
+			maximize="this.currentState='fullType'"
+			restore="this.currentState=''">
+		</v:ChartPod>
+		<v:ChartPod id="comp"
+			width="100%" height="100%"
+			title=" Comparison Chart"
+			maximize="this.currentState='fullComp'"
+			restore="this.currentState=''">
+		</v:ChartPod>
+	</mx:VBox>
+</mx:Application>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Metadata>
+		[Event("uploadComplete")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import flash.net.FileReference;
+			
+			private var fileRef:FileReference;
+
+			public function get fileName():String {
+				return fileRef.name;
+			}
+
+			private function fileBrowse():void{
+				this.fileRef = new FileReference();
+				fileRef.addEventListener(Event.SELECT, selectHandler);
+				fileRef.addEventListener(Event.COMPLETE, completeHandler);
+
+				var gifFilter:FileFilter = new FileFilter("GIF Images", "*.gif", "GIFF");
+				fileRef.browse( [gifFilter] );
+			}
+			
+			private function selectHandler(event:Event):void {
+				var request:URLRequest = new URLRequest("http://localhost:8300/flexGrocer/cfcs/fileUpload.cfm");
+				fileRef.upload(request);
+			}
+
+			private function completeHandler(event:Event):void {
+				dispatchEvent(new Event("uploadComplete"));
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Button click="fileBrowse()" label="Browse"/>
+</mx:Canvas>

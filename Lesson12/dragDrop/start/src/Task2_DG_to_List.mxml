@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="horizontal"
+	creationComplete="prodData.send()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable]
+			private var products:ArrayCollection;
+			[Bindable]
+			private var targetListDP:ArrayCollection=new ArrayCollection();
+			
+			private function resultHandler(event:ResultEvent):void{
+				products=event.result.catalog.product;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:HTTPService id="prodData"
+		url="http://www.flexgrocer.com/product.xml"
+		result="resultHandler(event)"/>	
+		
+	<mx:DataGrid id="initiatorGrid" 
+		dataProvider="{products}"
+		dragEnabled="true">
+		<mx:columns>
+			<mx:DataGridColumn dataField="name" headerText="Product"/>
+			<mx:DataGridColumn dataField="cost" headerText="Prine"/>
+			<mx:DataGridColumn dataField="isLowFat" headerText="Low Fat"/>
+			<mx:DataGridColumn dataField="isOrganic" headerText="Organic"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<mx:Spacer width="30"/>
+	
+	<mx:List id="targetList"
+		width="200" 
+		dropEnabled="true" 
+		dataProvider="{targetListDP}"/>
+	
+</mx:Application>

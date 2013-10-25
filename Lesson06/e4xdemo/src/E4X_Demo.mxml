@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal">
+     <mx:Style>
+          Application {
+              font-family:Verdana;
+              font-size:12px;
+          }
+     </mx:Style>
+
+     <mx:Script>
+          <![CDATA[
+	          import net.digitalprimates.utils.E4XParser;
+	          [Bindable]
+	          protected var myXML:XML = 
+				<catalog>
+					<category name="vegetables">
+						<product name="lettuce" cost="1.95">
+							<unit>bag</unit>
+							<desc>Cleaned and bagged</desc>
+						</product>
+						<product name="carrots" cost="2.95">
+							<unit>pound</unit>
+							<desc>Baby carrots, cleaned and peeled</desc>
+						</product>
+					</category>
+					<category name="fruit">
+						<product name="apples" cost="1.95">
+							<unit>each</unit>
+							<desc>Sweet Fuji</desc>
+						</product>
+						<berries>
+							<product name="raspberries" cost="3.95">
+								<unit>pint</unit>
+								<desc>Firm and fresh</desc>
+							</product>
+							<product name="strawberries" cost="2.95">
+								<unit>pint</unit>
+								<desc>Deep red and juicy</desc>
+							</product>
+						</berries>
+					</category>
+				</catalog>;
+	
+	          [Bindable]
+	          protected var myExpression:String = 'category.product';
+	          public function applyExpression():void {
+	              var returnXML:XMLList;
+	              try {
+	                   errorLabel.text = "";
+	                   returnXML = E4XParser.evaluate( new XML( inputXML.text ), inputExpression.text );
+	                   resultString.text = returnXML.toXMLString();
+	                   resultTree.dataProvider = returnXML;
+	              }
+	              catch (error:Error) {
+	                   resultString.text = "";
+	                   resultTree.dataProvider = new XMLList();
+	                   errorLabel.text = error.message;
+	              }
+	          }
+	
+	          protected function xmlDisplay(item:XML):String {
+	              var rowString:String;
+	              if ( item.nodeKind() == 'text' ) {
+	                   rowString = item.toString();
+	              } else {
+	                   rowString = item.name();
+	                   var attNamesList:XMLList = item.@*;
+	                   if ( attNamesList.length() > 0 ) {
+	                        rowString += ' ';
+	                        for (var i:int = 0; i < attNamesList.length(); i++) { 
+	                             rowString += '@' + attNamesList[i].name() + ':' + attNamesList[i].toString() + ' ';
+	                        }
+	                   }
+	              }
+	              return rowString;
+	          }
+          ]]>
+
+     </mx:Script>
+
+     <mx:VBox width="50%" height="100%">
+          <mx:Label text="Enter the XML to Search in the Text Area Below"/>
+          <mx:TextArea width="100%" height="100%" id="inputXML" text="{myXML}"/>
+          <mx:Spacer />
+          <mx:Label text="Enter your e4x expression in the Text Input Below"/>
+          <mx:TextInput width="100%" id="inputExpression" text="{myExpression}"/>
+          <mx:Label id="errorLabel" text="" color="#FF0000"/>
+          <mx:Spacer />
+          <mx:Label/>
+          <mx:Button label="Apply e4x Expression" click="applyExpression()"/>
+     </mx:VBox>
+     <mx:Spacer/>
+     <mx:VBox width="50%" height="100%">
+          <mx:Label text="Result as a Tree"/>
+          <mx:Tree width="100%" height="100%" id="resultTree" labelFunction="xmlDisplay"/>
+          <mx:Spacer />
+          <mx:Label text="Result as an XML String"/>
+          <mx:TextArea width="100%" height="100%" id="resultString"/>
+     </mx:VBox>
+</mx:Application>

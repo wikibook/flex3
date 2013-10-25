@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import valueObjects.Product;
+			import valueObjects.ShoppingCart;
+			import valueObjects.ShoppingCartItem;
+			
+			[Bindable]
+			public var cart:ShoppingCart;
+			
+			private function renderLabel(item:ShoppingCartItem):String
+			{
+				return String(item.quantity)+" "+item.product.prodName+":"+String(item.subtotal);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:List id="cartView"
+		dataProvider="{cart.aItems}"
+		labelFunction="renderLabel"/>
+</mx:VBox>

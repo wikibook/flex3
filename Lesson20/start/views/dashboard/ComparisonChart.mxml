@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<v:MaxRestorePanel
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:v="views.*" >
+	<mx:Metadata>
+		[Event(name="grossOrNetChange",type="events.TypeChangeEvent")]
+	</mx:Metadata>
+	<mx:Script>
+		<![CDATA[
+			import events.ObjectDataEvent;
+			import mx.collections.ArrayCollection;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.controls.dataGridClasses.DataGridColumn;
+
+			[Bindable]
+			public  var dp:ArrayCollection;
+			[Bindable]
+			public  var grossOrNet:String;
+		
+			
+			/*
+				DataGrid label functions
+			*/
+
+			private function renderDGDate(item:Object, col:DataGridColumn):String{
+				return mmddyyyy.format(item[col.dataField]);
+			}
+			private function renderDGDollars(item:Object, col:DataGridColumn):String{
+				return dollars.format(item[col.dataField]);
+			}
+
+			private function renderDate(value:Object, previousValue:Object,axis:CategoryAxis, item:Object):String{
+				return mmddyyyy.format(value);
+			}
+
+			private function renderDollars(value:Number, previousValue:Number,axis:LinearAxis):String{
+				return dollars.format(value);
+			}
+		]]>
+	</mx:Script>
+	<mx:DateFormatter id="mmddyyyy" formatString="MM/DD/YYYY" />
+	<mx:CurrencyFormatter currencySymbol="$" id="dollars" useThousandsSeparator="true"/>
+	
+	<mx:ViewStack id="chartStack"  width="100%" height="100%">
+		<mx:VBox>
+			<mx:Legend direction="horizontal" dataProvider="{chart}"/>
+			<mx:ColumnChart id="chart"
+				dataProvider="{dp}"
+				width="100%" height="100%">
+				<mx:horizontalAxisRenderers>
+					<mx:AxisRenderer canDropLabels="true" axis="{hCatAxis}"/>
+				</mx:horizontalAxisRenderers>
+				<mx:horizontalAxis>
+					<mx:CategoryAxis id="hCatAxis" categoryField="DTSALE" labelFunction="renderDate"/>
+				</mx:horizontalAxis>
+				<mx:verticalAxis>
+					<mx:LinearAxis id="vLinAxis" labelFunction="renderDollars"/>
+				</mx:verticalAxis>
+				<mx:series>
+					<mx:ColumnSeries yField="GROSS" displayName="Gross">
+					</mx:ColumnSeries>
+					<mx:ColumnSeries yField="NET" displayName="Net">
+					</mx:ColumnSeries>
+				</mx:series>
+			</mx:ColumnChart>
+	    </mx:VBox>	
+	     <mx:VBox width="100%" height="100%">
+			<mx:DataGrid dataProvider="{dp}" width="100%" height="100%" >
+				<mx:columns>
+					<mx:DataGridColumn dataField="DTSALE" 
+						headerText="Sale Date" 
+						labelFunction="renderDGDate"/>
+					<mx:DataGridColumn dataField="NET" 
+						headerText="Profit"  
+						labelFunction="renderDGDollars"/>
+					<mx:DataGridColumn dataField="GROSS" 
+						headerText="Gross Sales"  
+						labelFunction="renderDGDollars"/>		
+				</mx:columns>
+			</mx:DataGrid>
+	    </mx:VBox>
+	</mx:ViewStack>
+    
+	<mx:ControlBar id="controls">
+		<mx:Button label="Graph" id="btGraph" click="chartStack.selectedIndex=0"/>
+		<mx:Button label="Data" id="btData" click="chartStack.selectedIndex=1"/>
+		
+	</mx:ControlBar>
+	
+</v:MaxRestorePanel>

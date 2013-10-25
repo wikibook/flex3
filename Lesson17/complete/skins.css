@@ -1,0 +1,8 @@
+
+Button
+{
+	disabledSkin: Embed(source="assets/skins.swf", symbol="btDisabled");
+	downSkin: Embed(source="assets/skins.swf", symbol="btDown");
+	overSkin: Embed(source="assets/skins.swf", symbol="btOver");
+	upSkin: Embed(source="assets/skins.swf", symbol="btUp");
+}

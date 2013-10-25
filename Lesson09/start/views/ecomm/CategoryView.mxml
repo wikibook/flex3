@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HorizontalList xmlns:mx="http://www.adobe.com/2006/mxml"
+	dataProvider="{cats}"
+	itemRenderer="views.ecomm.TextAndPic"
+	horizontalScrollPolicy="off"
+	click="categorySelect()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+
+			[Bindable]
+			public var cats:ArrayCollection;
+			[Bindable]
+			public var catSelected:int;
+			
+			private function categorySelect():void{
+				catSelected=this.selectedItem.catID;
+			}
+		]]>
+	</mx:Script>
+</mx:HorizontalList>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="vertical"
+	creationComplete="unitRPC.send()"
+	xmlns:v="views.dataEntry.*"
+	xmlns:m="managers.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.rpc.events.ResultEvent;
+			import mx.collections.ArrayCollection;
+	
+			[Bindable]
+			private var units:ArrayCollection=new ArrayCollection();
+	
+			[Bindable]
+			private var categories:ArrayCollection;
+	
+			[Bindable]
+			private var foodColl:XML;
+	
+			private function unitRPCResult(event:ResultEvent):void
+			{
+				units=event.result.allUnits.unit;
+			}
+			
+			public function categorizedProductDataLoaded(aCats:Array):void{
+				categories = new ArrayCollection(aCats);
+				foodColl= prodMgr.getCategorizedProducts();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HTTPService id="unitRPC"
+		url="http://www.flexgrocer.com/units.xml"
+		result="unitRPCResult(event)"/>
+
+	<v:UpdateDeleteProd
+		units="{units}"
+		foodColl="{foodColl}"/>
+
+	<v:AddProduct
+		cats="{categories}"
+		units="{units}"/>
+
+	<m:CategorizedProductManager id="prodMgr"/>
+
+</mx:Application>

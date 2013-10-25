@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.printing.FlexPrintJob;
+
+			private function doPrint():void{
+				var pj:FlexPrintJob=new FlexPrintJob();
+				if(pj.start() != true){
+					return;
+				}
+				pj.addObject(printContainer);
+				pj.send();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:VBox id="printContainer"
+		backgroundColor="#FFFFFF">
+		<mx:Label text="This will be the first print task"/>
+		<mx:Button label="Print Page" click="doPrint()"/>
+	</mx:VBox>
+	
+</mx:Application>

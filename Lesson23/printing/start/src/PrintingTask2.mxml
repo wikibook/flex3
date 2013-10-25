@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical"
+	creationComplete="prodDataHSRPC.send()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.printing.FlexPrintJob;
+			import mx.collections.ArrayCollection;
+
+			[Bindable]
+			public var prodData:ArrayCollection;
+			private function doPrint():void{
+				var pj:FlexPrintJob = new FlexPrintJob();
+				if(pj.start() != true){
+					return;
+				}
+				contact.text="Contact: " + custName.text + " " + custEmail.text;
+				myPrintDG.dataProvider=prodInfo.dataProvider;
+				pj.addObject(printVBox);
+				pj.send();	
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:HTTPService id="prodDataHSRPC"
+		url="prodData.xml"
+		result="prodData = prodDataHSRPC.lastResult.productList.product as ArrayCollection"/>
+
+    <mx:Form id="myForm">
+        <mx:FormHeading label="Contact Information"/>
+        <mx:FormItem label="Name: ">
+            <mx:TextInput id="custName" width="200" text="Sally Shopper"
+                fontWeight="bold"/>
+        </mx:FormItem>
+        <mx:FormItem label="Email: ">
+            <mx:TextInput id="custEmail" width="200" text="sally@shopper.com"
+                fontWeight="bold"/>
+        </mx:FormItem>
+        <mx:FormHeading label="Product Information"/>
+		<mx:DataGrid id="prodInfo" 
+			dataProvider="{prodData}"/>	
+        <mx:Button id="myButton" label="Print" click="doPrint()"/>
+    </mx:Form>
+	<mx:VBox id="printVBox"
+		backgroundColor="#FFFFFF"
+		height="250" width="450"
+		paddingTop="50" paddingLeft="50" paddingRight="50"
+		visible="false">
+		<mx:Label id="contact"/>
+		<mx:PrintDataGrid id="myPrintDG"
+			width="100%"
+			height="100%"/>
+	</mx:VBox>
+</mx:Application>

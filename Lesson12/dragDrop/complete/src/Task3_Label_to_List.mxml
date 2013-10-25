@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.DragSource;
+			import mx.managers.DragManager;
+			import mx.events.DragEvent;
+			import mx.core.IUIComponent;
+			
+			[Bindable]
+			private var myListDP:ArrayCollection=new ArrayCollection();
+			
+			private function dragIt(initiator:Label,dsData:String,event:MouseEvent,format:String):void{
+				var ds:DragSource=new DragSource();
+				ds.addData(dsData,format);
+				DragManager.doDrag(initiator,ds,event);	
+			}
+			private function doDragEnter(event:DragEvent,format:String):void{
+				if(event.dragSource.hasFormat(format)){
+					DragManager.acceptDragDrop(IUIComponent(event.target));	
+				}
+			}
+			private function doDragDrop(event:DragEvent,format:String):void{
+				var myLabelData:Object=new Object();
+				myLabelData=event.dragSource.dataForFormat(format);
+				myList.dataProvider.addItem(myLabelData);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Label id="myLabel" 
+		text="Drag me"
+		mouseDown="dragIt(myLabel,'My data here',event,'myFormat')"/>
+	
+	<mx:Spacer width="20"/>
+	
+	<mx:List id="myList" 
+		width="200"
+		dataProvider="{myListDP}"
+		dragEnter="doDragEnter(event,'myFormat')"
+		dragDrop="doDragDrop(event,'myFormat')"/>
+		
+</mx:Application>

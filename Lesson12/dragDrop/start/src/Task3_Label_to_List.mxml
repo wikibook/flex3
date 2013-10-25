@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			private var myListDP:ArrayCollection=new ArrayCollection();
+		]]>
+	</mx:Script>
+	
+	<mx:Label id="myLabel" 
+		text="Drag me"/>
+	
+	<mx:Spacer width="20"/>
+	
+	<mx:List id="myList" 
+		width="200"
+		dataProvider="{myListDP}"/>
+		
+</mx:Application>

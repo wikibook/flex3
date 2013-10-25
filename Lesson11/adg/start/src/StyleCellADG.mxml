@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+	
+			private var arrayData:Array=[
+				{name:"banana",cat:"fruit",cost:.99,qty:2},
+				{name:"bread",cat:"bakery",cost:1.99,qty:3},
+				{name:"cheddar cheese",cat:"dairy",cost:4.52,qty:6},
+				{name:"sour cream",cat:"dairy",cost:.33,qty:2},
+				{name:"orange",cat:"fruit",cost:.52,qty:4},
+				{name:"donut",cat:"bakery",cost:.33,qty:2},
+				{name:"yogurt",cat:"dairy",cost:.99,qty:5},
+				{name:"milk",cat:"dairy",cost:2.99,qty:2},
+				{name:"apple",cat:"fruit",cost:1.05,qty:4},
+				{name:"colby cheese",cat:"dairy",cost:3.05,qty:4}];
+	
+			[Bindable]
+			private var dp:ArrayCollection=new ArrayCollection(arrayData);
+
+			public function myStyleFunc(data:Object,col:AdvancedDataGridColumn):Object
+			{
+				return null;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:AdvancedDataGrid dataProvider="{dp}"
+		height="250">
+		<mx:columns>
+			<mx:AdvancedDataGridColumn dataField="cat"/>
+			<mx:AdvancedDataGridColumn dataField="name"/>
+			<mx:AdvancedDataGridColumn dataField="cost"/>
+		</mx:columns>
+	</mx:AdvancedDataGrid>
+
+</mx:Application>

@@ -1,0 +1,101 @@
+/* CSS file */
+Application{
+	font-family: Arial, Helvetica, sans-serif;
+	background-color:#333333;
+	selectionColor: #EA800C;
+	rollOverColor: #CECECE;
+}
+HorizontalList{
+	background-color: #333333;
+	border-style: none;
+}
+DateChooser{
+	color: #333333;
+	headerColors: #FFFFFF, #EA800C;
+	backgroundColor: #9B9B9B;
+}
+.formPage1{
+	labelWidth: 75;
+	indicatorGap:17;
+}
+.formPage2{
+	labelWidth: 100;
+	indicatorGap:17;
+}
+.formHBox{
+	horizontalGap: 40;
+}
+.borderBox{
+	border-style: solid;
+	border-color: #333333;
+	background-color:#FFFFFF;
+}
+.bottomBranding{
+	font-size:10;
+	color:#000000;
+}
+.standardOrange{
+	font-size:12;
+	color: #EA800C;
+}
+.standardOrangeBold{
+	font-size:12;
+	color: #EA800C;
+	font-weight:bold;
+}
+.standardBlack{
+	font-size:12;
+	color: #333333;
+}
+.standardBlackBold{
+	font-size:12;
+	color: #333333;
+	font-weight: bold;
+}
+.homePageText{
+	color: #333333;
+	font-size: 13;
+}
+.categoryText{
+	font-size: 14;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-align: center;
+}
+.logoBottom{
+	color: #EA800C;
+	font-weight: bold;
+	font-size: 19;
+}
+.logoTop{
+	color: #EA800C;
+	font-weight: bold;
+	font-size: 40;
+}
+.homePageTitle{
+	font-size: 90;
+	color: #EA800C;
+}
+.whiteBg{
+	background-color:#FFFFFF;
+}
+
+.cartGrid{
+	background: #FFFFFF;
+	headerColors: #FFFFFF, #EA800C;
+	hGridLines: false;
+	alternatingRowColors: #EAEAEA,#EAEAEA;
+	vGridLines: false;
+}
+LinkButton{
+	rollOverColor:	#EA800C;
+	selectionColor:#EA800C;
+	color:#000000;
+}
+.homePageButton {
+    upSkin:ClassReference('skins.OrangeOval');
+    downSkin:ClassReference('skins.OrangeOval');
+    overSkin:ClassReference('skins.OrangeOval');
+    disabledSkin:ClassReference('skins.OrangeOval');
+    color:#ffffff;
+}
